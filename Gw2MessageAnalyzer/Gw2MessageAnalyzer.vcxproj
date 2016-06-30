@@ -19,10 +19,12 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Detour.cpp" />
     <ClCompile Include="src\DllMain.cpp" />
     <ClCompile Include="src\Library.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\Detour.hpp" />
     <ClInclude Include="include\Library.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
