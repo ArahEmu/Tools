@@ -21,11 +21,11 @@
   <ItemGroup>
     <ClCompile Include="src\Detour.cpp" />
     <ClCompile Include="src\DllMain.cpp" />
-    <ClCompile Include="src\Library.cpp" />
+    <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Detour.hpp" />
-    <ClInclude Include="include\Library.hpp" />
+    <ClInclude Include="include\Main.hpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EC7696EC-9DC7-434C-98AC-7D0D44DCA1A6}</ProjectGuid>
