@@ -2,10 +2,8 @@
 #include <Windows.h>
 #include "Detour.hpp"
 
-Detour::Detour(void* sourceFunc, const void* destinationFunc, size_t length)
+Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
 {
-	uint8_t* source = static_cast<uint8_t*>(sourceFunc);
-	const uint8_t* destination = static_cast<uint8_t*>(const_cast<void*>(destinationFunc));
 	uint8_t* jump = static_cast<uint8_t*>(malloc(length + 5));
 
 	DWORD protection;
