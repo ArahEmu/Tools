@@ -3,7 +3,7 @@
 
 Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
 {
-	uint8_t* jump = static_cast<uint8_t*>(malloc(length + 5));
+	uint8_t* jump = new uint8_t[length + 5];
 
 	DWORD protection;
 	VirtualProtect(source, length, PAGE_EXECUTE_READWRITE, &protection);
