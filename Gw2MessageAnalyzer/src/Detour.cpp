@@ -22,7 +22,15 @@ Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
 		*(source + i) = 0x90;
 	}
 
+	m_length = length;
+	m_source = source;
 	m_original = jump;
+}
+
+Detour::~Detour()
+{
+	memcpy(m_source, m_original, m_length);
+	delete[] m_original;
 }
 
 void* Detour::getOriginal()

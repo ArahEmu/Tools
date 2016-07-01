@@ -7,8 +7,11 @@
 class Detour
 {
 private:
-	void* m_original;
+	size_t m_length;
+	uint8_t* m_source;
+	uint8_t* m_original;
 public:
 	Detour(uint8_t* source , const uint8_t* destination, size_t length);
+	~Detour();
 	void* getOriginal();
 };
