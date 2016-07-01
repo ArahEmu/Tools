@@ -1,5 +1,4 @@
 #include "Detour.hpp"
-#include <memory>
 #include <Windows.h>
 
 Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
