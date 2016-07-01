@@ -6,9 +6,9 @@
 std::unique_ptr<Detour> m_updateSendBufferDetour;
 std::unique_ptr<Detour> m_copyRecvBufferDetour;
 
-void __fastcall updateSendBuffer(void* msgCon, uint32_t edx)
+void __fastcall updateSendBuffer(void* msgCon)
 {
-    CALL_ORIGINAL(m_updateSendBufferDetour, updateSendBuffer, msgCon, edx);
+    CALL_ORIGINAL(m_updateSendBufferDetour, updateSendBuffer, msgCon);
 }
 
 int __fastcall copyRecvBuffer(void* msgCon, void* unk, uint8_t** rawDataBuffer, size_t* rawBytes)
