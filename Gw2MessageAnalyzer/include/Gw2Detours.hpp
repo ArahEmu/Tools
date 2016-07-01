@@ -2,5 +2,5 @@
 
 namespace Gw2Detours
 {
-	void init();
+    void init();
 }

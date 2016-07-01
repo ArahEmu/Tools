@@ -3,5 +3,5 @@
 
 void main()
 {
-	Gw2Detours::init();
+    Gw2Detours::init();
 }

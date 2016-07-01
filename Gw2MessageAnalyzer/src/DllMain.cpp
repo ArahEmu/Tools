@@ -3,14 +3,14 @@
 
 BOOL WINAPI DllMain(HINSTANCE instance, DWORD reason, LPVOID reserved)
 {
-	DisableThreadLibraryCalls(instance);
+    DisableThreadLibraryCalls(instance);
 
-	switch (reason)
-	{
-	case DLL_PROCESS_ATTACH:
-		main();
-		break;
-	}
+    switch (reason)
+    {
+    case DLL_PROCESS_ATTACH:
+        main();
+        break;
+    }
 
-	return TRUE;
+    return TRUE;
 }
