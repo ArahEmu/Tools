@@ -25,9 +25,9 @@
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\Detour.hpp" />
-    <ClInclude Include="include\Gw2Detours.hpp" />
-    <ClInclude Include="include\Main.hpp" />
+    <ClInclude Include="include\Detour.h" />
+    <ClInclude Include="include\Gw2Detours.h" />
+    <ClInclude Include="include\Main.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EC7696EC-9DC7-434C-98AC-7D0D44DCA1A6}</ProjectGuid>

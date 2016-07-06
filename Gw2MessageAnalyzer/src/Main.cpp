@@ -1,5 +1,5 @@
-#include "Main.hpp"
-#include "Gw2Detours.hpp"
+#include "Main.h"
+#include "Gw2Detours.h"
 
 void main()
 {

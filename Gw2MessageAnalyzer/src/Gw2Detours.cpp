@@ -1,5 +1,5 @@
-#include "Gw2Detours.hpp"
-#include "Detour.hpp"
+#include "Gw2Detours.h"
+#include "Detour.h"
 #include <memory>
 #include <Windows.h>
 
