@@ -22,10 +22,12 @@
     <ClCompile Include="src\Detour.cpp" />
     <ClCompile Include="src\DllMain.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\WinsockDetours.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Detour.h" />
     <ClInclude Include="include\Main.h" />
+    <ClInclude Include="include\WinsockDetours.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{7C619730-F5F8-4847-B1FB-E53499CB70A4}</ProjectGuid>
