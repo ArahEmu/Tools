@@ -6,8 +6,8 @@ Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
     uint8_t* jump = new uint8_t[length + 5];
 
     DWORD protection;
-    VirtualProtect(source, length, PAGE_EXECUTE_READWRITE, &protection);
     VirtualProtect(jump, length + 5, PAGE_EXECUTE_READWRITE, &protection);
+    VirtualProtect(source, length, PAGE_EXECUTE_READWRITE, &protection);
 
     memcpy(jump, source, length);
 
@@ -21,6 +21,8 @@ Detour::Detour(uint8_t* source, const uint8_t* destination, size_t length)
     {
         *(source + i) = 0x90;
     }
+
+    VirtualProtect(source, length, protection, &protection);
 
     m_length = length;
     m_source = source;
