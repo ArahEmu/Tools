@@ -14,7 +14,7 @@
 std::unique_ptr<Detour> g_getHostByNameDetour;
 std::unique_ptr<Detour> g_connectExDetour;
 bool g_detoursInitialized;
-std::map<uint64_t, std::string> g_hostnameMap;
+std::map<uint32_t, std::string> g_hostnameMap;
 
 hostent* PASCAL getHostByNameDetour(const char* name)
 {
