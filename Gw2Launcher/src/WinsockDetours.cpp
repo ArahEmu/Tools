@@ -13,16 +13,10 @@
 
 std::unique_ptr<Detour> g_getHostByNameDetour;
 std::unique_ptr<Detour> g_connectExDetour;
-bool g_detoursInitialized;
 std::map<uint32_t, std::string> g_hostnameMap;
 
 hostent* PASCAL getHostByNameDetour(const char* name)
 {
-    if (!g_detoursInitialized)
-    {
-        g_detoursInitialized = true;
-    }
-
     std::string hostname = name;
     std::transform(hostname.begin(), hostname.end(), hostname.begin(), tolower);
 
@@ -45,34 +39,31 @@ hostent* PASCAL getHostByNameDetour(const char* name)
 BOOL PASCAL connectExDetour(SOCKET s, const sockaddr* name, int namelen, PVOID lpSendBuffer,
     DWORD dwSendDataLength, LPDWORD lpdwBytesSent, LPOVERLAPPED lpOverlapped)
 {
-    if (g_detoursInitialized)
+    auto addr = reinterpret_cast<sockaddr_in*>(const_cast<sockaddr*>(name));
+
+    if (g_hostnameMap.find(addr->sin_addr.s_addr) != g_hostnameMap.end())
     {
-        auto addr = reinterpret_cast<sockaddr_in*>(const_cast<sockaddr*>(name));
+        // Retrieve hostname associated with the specfied IP.
+        std::string hostname = g_hostnameMap[addr->sin_addr.s_addr];
 
-        if (g_hostnameMap.find(addr->sin_addr.s_addr) != g_hostnameMap.end())
+        if (!hostname.find("cligate"))
         {
-            // Retrieve hostname associated with the specfied IP.
-            std::string hostname = g_hostnameMap[addr->sin_addr.s_addr];
-
-            if (!hostname.find("cligate"))
-            {
-                // Redirect portal server.
-                addr->sin_port = htons(6112);
-            }
-            else if (!hostname.find("auth"))
-            {
-                // Redirect auth server.
-                addr->sin_port = htons(7112);
-                addr->sin_addr.s_addr = inet_addr("127.0.0.1");
-            }
+            // Redirect portal server.
+            addr->sin_port = htons(6112);
         }
-        else
+        else if (!hostname.find("auth"))
         {
-            // The hostname map does not contain the specified IP.
-            // Redirect game server.
-            addr->sin_port = htons(8112);
+            // Redirect auth server.
+            addr->sin_port = htons(7112);
             addr->sin_addr.s_addr = inet_addr("127.0.0.1");
         }
+    }
+    else
+    {
+        // The hostname map does not contain the specified IP.
+        // Redirect game server.
+        addr->sin_port = htons(8112);
+        addr->sin_addr.s_addr = inet_addr("127.0.0.1");
     }
 
     return CALL_ORIGINAL(g_connectExDetour, connectExDetour, s, name, namelen, lpSendBuffer,
