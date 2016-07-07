@@ -7,76 +7,72 @@
 #include <memory>
 #include <string>
 #include <algorithm>
+#include <map>
 #include <WinSock2.h>
 #include <MSWSock.h>
-
-enum ServerType
-{
-    None,
-    Portal,
-    Auth,
-    Unspecified
-};
 
 std::unique_ptr<Detour> g_getHostByNameDetour;
 std::unique_ptr<Detour> g_connectExDetour;
 bool g_detoursInitialized;
-ServerType g_serverType;
+std::map<uint64_t, std::string> g_hostnameMap;
 
-hostent* WINAPI getHostByNameDetour(const char* name)
+hostent* PASCAL getHostByNameDetour(const char* name)
 {
-    if (!g_detoursInitialized) g_detoursInitialized = true;
+    if (!g_detoursInitialized)
+    {
+        g_detoursInitialized = true;
+    }
 
     std::string hostname = name;
     std::transform(hostname.begin(), hostname.end(), hostname.begin(), tolower);
 
-    if (!hostname.find("cligate"))
+    auto hosts = CALL_ORIGINAL(g_getHostByNameDetour, getHostByNameDetour, name);
+    auto ips = reinterpret_cast<in_addr**>(hosts->h_addr_list);
+
+    for (int i = 0; ips[i]; i++)
     {
-        g_serverType = ServerType::Portal;
-    }
-    else if (!hostname.find("auth"))
-    {
-        g_serverType = ServerType::Auth;
-    }
-    else
-    {
-        g_serverType = ServerType::Unspecified;
+        auto ip = ips[i]->s_addr;
+
+        if (g_hostnameMap.find(ip) == g_hostnameMap.end())
+        {
+            g_hostnameMap.insert(std::pair<uint64_t, std::string>(ip, hostname));
+        }
     }
 
-    return CALL_ORIGINAL(g_getHostByNameDetour, getHostByNameDetour, name);
+    return hosts;
 }
 
-BOOL WINAPI connectExDetour(SOCKET s, const sockaddr* name, int namelen, PVOID lpSendBuffer,
+BOOL PASCAL connectExDetour(SOCKET s, const sockaddr* name, int namelen, PVOID lpSendBuffer,
     DWORD dwSendDataLength, LPDWORD lpdwBytesSent, LPOVERLAPPED lpOverlapped)
 {
     if (g_detoursInitialized)
     {
-        // Cast the sockaddr to an IPv4 sockaddr_in
         auto addr = reinterpret_cast<sockaddr_in*>(const_cast<sockaddr*>(name));
 
-        if (g_serverType == ServerType::Portal)
+        if (g_hostnameMap.find(addr->sin_addr.s_addr) != g_hostnameMap.end())
         {
-            // Redirect portal server.
+            // Retrieve hostname associated with the specfied IP.
+            std::string hostname = g_hostnameMap[addr->sin_addr.s_addr];
 
-            addr->sin_port = htons(6112);
+            if (!hostname.find("cligate"))
+            {
+                // Redirect portal server.
+                addr->sin_port = htons(6112);
+            }
+            else if (!hostname.find("auth"))
+            {
+                // Redirect auth server.
+                addr->sin_port = htons(7112);
+                addr->sin_addr.s_addr = inet_addr("127.0.0.1");
+            }
         }
-        else if (g_serverType == ServerType::Auth)
+        else
         {
-            // Redirect authentication server.
-
-            addr->sin_port = htons(7112);
-            addr->sin_addr.s_addr = inet_addr("127.0.0.1");
-        }
-        else if (g_serverType == ServerType::None)
-        {
-            // gethostbyname hasn't been called prior to this function.
+            // The hostname map does not contain the specified IP.
             // Redirect game server.
-
             addr->sin_port = htons(8112);
             addr->sin_addr.s_addr = inet_addr("127.0.0.1");
         }
-
-        g_serverType = ServerType::None;
     }
 
     return CALL_ORIGINAL(g_connectExDetour, connectExDetour, s, name, namelen, lpSendBuffer,
