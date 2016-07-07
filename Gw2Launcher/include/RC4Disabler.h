@@ -1,6 +1,7 @@
 #pragma once
 
-namespace RC4Disabler
+class RC4Disabler
 {
-    void init();
-}
+public:
+    static void init();
+};

@@ -1,6 +1,7 @@
 #pragma once
 
-namespace WinsockDetours
+class WinsockDetours
 {
-    void init();
+public:
+    static void init();
 };
