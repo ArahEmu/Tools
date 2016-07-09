@@ -88,8 +88,8 @@ void WinsockDetours::init()
 
     // Create detours
 #ifndef _WIN64
-    g_getHostByNameDetour = std::make_unique<Detour>((uint8_t*)gethostbyname, (uint8_t*)getHostByNameDetour, 16);
-    g_connectExDetour = std::make_unique<Detour>((uint8_t*)connectExFunc, (uint8_t*)connectExDetour, 12);
+    g_getHostByNameDetour = std::make_unique<Detour>((uint8_t*)gethostbyname, (uint8_t*)getHostByNameDetour, 11);
+    g_connectExDetour = std::make_unique<Detour>((uint8_t*)connectExFunc, (uint8_t*)connectExDetour, 7);
 #else
     g_getHostByNameDetour = std::make_unique<Detour>((uint8_t*)gethostbyname, (uint8_t*)getHostByNameDetour, 19);
     g_connectExDetour = std::make_unique<Detour>((uint8_t*)connectExFunc, (uint8_t*)connectExDetour, 15);
