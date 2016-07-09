@@ -12,8 +12,13 @@ void RC4Disabler::init()
     uint8_t* start = (uint8_t*)mbi.BaseAddress;
     uint8_t* end = start + mbi.RegionSize;
 
+#ifndef _WIN64
     // xor al, byte ptr [ecx + ebx - 1]
     uint8_t xorPattern[] = { 0x32, 0x44, 0x19, 0xFF };
+#else
+    // xor dl, byte ptr ds:[rdi + rbx - 1]
+    uint8_t xorPattern[] = { 0x32, 0x54, 0x1F, 0xFF };
+#endif
 
     while (start < end)
     {
@@ -23,7 +28,6 @@ void RC4Disabler::init()
             VirtualProtect(start, 1, PAGE_EXECUTE_READWRITE, &protection);
 
             // Replace xor with mov instruction
-            // mov al, byte ptr [ecx + ebx - 1]
             *start = 0x8A;
         }
 
