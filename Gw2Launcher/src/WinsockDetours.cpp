@@ -49,7 +49,6 @@ BOOL PASCAL connectExDetour(SOCKET s, const sockaddr* name, int namelen, PVOID l
         if (!hostname.find("cligate"))
         {
             // Redirect portal server.
-            addr->sin_port = htons(6112);
         }
         else if (!hostname.find("auth"))
         {
