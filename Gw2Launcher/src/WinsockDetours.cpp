@@ -29,7 +29,7 @@ hostent* PASCAL getHostByNameDetour(const char* name)
 
         if (g_hostnameMap.find(ip) == g_hostnameMap.end())
         {
-            g_hostnameMap.insert(std::pair<uint64_t, std::string>(ip, hostname));
+            g_hostnameMap.insert(std::pair<uint32_t, std::string>(ip, hostname));
         }
     }
 
